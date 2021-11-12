@@ -17,6 +17,7 @@ async function run(){
         const database = client.db('homeservices');
         const servicesCollection = database.collection('services')
         const servicesCollection2 = database.collection('allservices')
+        const servicesCollection3 = database.collection('orderdetails')
         //get api
         app.get('/services',async(req,res)=>{
            const cursor = servicesCollection.find({});
@@ -57,9 +58,26 @@ async function run(){
           res.json(result);
        })
 
+       // order Details
+         app.get('/orderdetails',async(req,res)=>{
+         const email = req.query.email;   
+         const query = {email:email}
+         const cursor = servicesCollection3.find(query);
+         const allservices = await cursor.toArray()
+         res.send(allservices);
+      })
+      //post api
+      app.post('/orderdetails',async(req,res)=>{
+      const allservice = req.body;
+      console.log('hit the post api',allservice);
+      
+         const result = await servicesCollection3.insertOne(allservice);
+         console.log(result);
+         res.json(result);
+      })
         
-    
         }
+        
     finally{
     
     }
