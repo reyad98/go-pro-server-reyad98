@@ -18,6 +18,7 @@ async function run(){
         const servicesCollection = database.collection('services')
         const servicesCollection2 = database.collection('allservices')
         const servicesCollection3 = database.collection('orderdetails')
+        const userCollection = database.collection('users');
         //get api
         app.get('/services',async(req,res)=>{
            const cursor = servicesCollection.find({});
@@ -66,17 +67,54 @@ async function run(){
          const allservices = await cursor.toArray()
          res.send(allservices);
       })
-      //post api
       app.post('/orderdetails',async(req,res)=>{
       const allservice = req.body;
       console.log('hit the post api',allservice);
       
          const result = await servicesCollection3.insertOne(allservice);
-         console.log(result);
+         
          res.json(result);
       })
+
+      //admin check
+      app.get('/users/:email',async(req,res)=>{
+         const email= req.params.email;
+         const query ={email:email};
+         const user = await userCollection.findOne(query);
+         let isAdmin = false;
+         if(user?.role ==='admin'){
+              isAdmin=true;
+         }
+         res.json({admin:isAdmin});
+      })
         
-        }
+
+      //code for set users
+      app.post('/users',async(req,res)=>{
+         const user = req.body;
+         const result = await userCollection.insertOne(user);
+         console.log(result);
+         res.json(result);
+      });
+     
+      app.put('/users',async(req,res)=>{
+         const user = req.body;
+         const filter = {email:user.email};
+         const options = {upsert:true};
+         const updateDoc ={$set:user};
+         const result =await userCollection.updateOne(filter,updateDoc,options);
+         res.json(result);
+      });
+
+      app.put('/users/admin',async(req,res)=>{
+         const user = req.body;
+         const filter ={email:user.email};
+         const updateDoc = {$set:{role:'admin'}};
+         const result = await userCollection.updateOne(filter,updateDoc);
+         res.json(result);
+      })
+
+      }
         
     finally{
     
