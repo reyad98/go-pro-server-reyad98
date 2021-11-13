@@ -126,6 +126,10 @@ app.get('/', (req, res) => {
   res.send('Hello action heroku!')
 })
 
+app.get('/hello',(req,res)=>{
+   res.send('hhhhh');
+})
+
 app.listen(port, () => {
   console.log(`Example app listening at y ${port}`)
 })
