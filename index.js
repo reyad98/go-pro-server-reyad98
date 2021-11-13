@@ -69,7 +69,7 @@ async function run(){
       })
       app.post('/orderdetails',async(req,res)=>{
       const allservice = req.body;
-      console.log('hit the post api',allservice);
+      console.log('hit the post api ok',allservice);
       
          const result = await servicesCollection3.insertOne(allservice);
          
@@ -123,7 +123,7 @@ async function run(){
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-  res.send('Hello action!')
+  res.send('Hello action heroku!')
 })
 
 app.listen(port, () => {
