@@ -100,12 +100,12 @@ async function run() {
 
       //delet order
 
-      app.delete('/orderdetails', async (req, res) => {
+      app.delete('/orderdetails/:id', async (req, res) => {
          const id = req.params.id;
          const query = { _id: ObjectId(id) };
          const result = await servicesCollection3.deleteOne(query);
          res.json(result);
-
+         console.log(id);
       })
 
       //admin check
